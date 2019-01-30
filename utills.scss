@@ -1,0 +1,180 @@
+@charset "UTF-8";
+/** rem 布局不再使用 JavaScript 设置 **/
+html {
+  font-size: calc(100vw / 7.5)
+}
+
+/** 文字的波浪线 **/
+@mixin waveline($color,$h) {
+  position: relative;
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: $h;
+    background: linear-gradient(135deg, transparent, transparent 45%, $color, transparent 55%, transparent 100%),
+    linear-gradient(45deg, transparent, transparent 45%, $color, transparent 55%, transparent 100%);
+    background-size: $h * 2 $h * 2;
+  }
+}
+
+/** 图片黑白色彩 **/
+.desaturate {
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+}
+
+/** 向右的三角形 **/
+.triangle-right {
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-left: 100px solid red;
+  border-bottom: 50px solid transparent;
+}
+
+/** 改变 input 焦点光标的颜色 **/
+input {
+  caret-color: red;
+}
+
+/** 移动web页面支持弹性滚动 **/
+body {
+  -webkit-overflow-scrolling: touch; /* ios5+ */
+}
+
+.element {
+  overflow: auto;
+}
+
+/**  开启 GPU 硬件加速  **/
+.transform {
+  will-change: transform;
+  transform: translateZ(0); //对于 Safari 及一些旧版本浏览器，它们不能识别 will-change，则需要使用某种 translate 3D 进行 hack
+}
+
+/** :not() 去除导航上不需要的属性 **/
+ul > li:not(:last-child)::after {
+  content: ",";
+}
+
+/** 如何实现文字两端对齐 **/
+.justify {
+  text-align-last: justify;
+}
+
+/** 文字竖着呈现 **/
+.verticle-mode {
+  writing-mode: tb-rl;
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+}
+
+/* IE7比较弱，需要做点额外的动作 */
+.verticle-mode {
+  *display: inline;
+  *writing-mode: tb-rl;
+}
+
+/* 利用 nth-of-type 选择某范围内的子元素 */
+//奇数
+tbody tr:nth-of-type(2n+1) {
+  background-color: green;
+}
+
+//偶数
+tbody tr:nth-of-type(2n) {
+  background-color: red;
+}
+
+//选择5-10的子元素
+table tr:nth-child(n+5):nth-child(-n+10) {
+  background-color: red;
+}
+
+/** 美化浏览器自带的 radio ，checkbox 属性 **/
+.radio-beauty-container {
+  font-size: 0;
+  $bgc: green;
+  %common {
+    padding: 2px;
+    background-color: $bgc;
+    background-clip: content-box;
+  }
+  .radio-name {
+    vertical-align: middle;
+    font-size: 16px;
+  }
+  .radio-beauty {
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid $bgc;
+    vertical-align: middle;
+    margin: 0 15px 0 3px;
+    border-radius: 50%;
+    &:hover {
+      box-shadow: 0 0 7px $bgc;
+      @extend %common;
+    }
+  }
+  input[type="radio"]:checked + .radio-beauty {
+    @extend %common;
+  }
+}
+
+/** 利用用 :valid 和 :invalid 来做表单即时校验 **/
+.valid {
+  border-color: #429032;
+  box-shadow: inset 5px 0 0 #429032;
+}
+
+.invalid {
+  border-color: #D61D1D;
+  box-shadow: inset 5px 0 0 #D61D1D;
+}
+
+.form-group {
+  width: 32rem;
+  padding: 1rem;
+  border: 1px solid transparent;
+  &:hover {
+    border-color: #eee;
+    transition: border .2s;
+  }
+  label {
+    display: block;
+    font-weight: normal;
+  }
+  input,
+  textarea {
+    display: block;
+    width: 100%;
+    line-height: 2rem;
+    padding: .5rem .5rem .5rem 1rem;
+    border: 1px solid #ccc;
+    outline: none;
+    &:valid {
+      @extend .valid;
+    }
+    &:invalid {
+      @extend .invalid;
+    }
+  }
+}
+
+/** 利用 CSS 的 content 属性 attr 抓取资料 **/
+//<div data-msg="Open this file in Github Desktop"> hover  </div>
+.attr {
+  content: attr(data-msg);
+}
+
+/** 内容自动撑开的,过渡动画 **/
+//由于高度的不确定，而 transtion 是需要具体的树枝，所以设置 height:auto 是无法实现效果的，可以通过 max-height 这个属性间接的实现这么个效果
